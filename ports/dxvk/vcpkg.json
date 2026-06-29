@@ -1,6 +1,7 @@
 {
   "name": "dxvk",
   "version": "3.0",
+  "port-version": 1,
   "description": "A Vulkan-based translation layer for Direct3D 8/9/10/11 (LibreSAGE fork).",
   "homepage": "https://github.com/LibreSAGE/dxvk",
   "license": "Zlib",
@@ -61,6 +62,24 @@
     },
     "dxgi": {
       "description": "Build the DXGI implementation"
+    },
+    "glfw": {
+      "description": "Enable the GLFW window system integration (DXVK Native)",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "sdl2": {
+      "description": "Enable the SDL2 window system integration (DXVK Native)",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sdl3": {
+      "description": "Enable the SDL3 window system integration (DXVK Native)",
+      "dependencies": [
+        "sdl3"
+      ]
     }
   }
 }

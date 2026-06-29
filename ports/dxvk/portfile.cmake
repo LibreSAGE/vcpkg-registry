@@ -8,14 +8,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Map vcpkg features onto dxvk's Meson options.
+# Map vcpkg features onto dxvk's Meson options. The enable_* options are
+# booleans (true/false); the native_* WSI options are Meson features
+# (enabled/disabled).
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        dxgi  enable_dxgi
-        d3d8  enable_d3d8
-        d3d9  enable_d3d9
-        d3d10 enable_d3d10
-        d3d11 enable_d3d11
+        dxgi  -Denable_dxgi=true
+        d3d8  -Denable_d3d8=true
+        d3d9  -Denable_d3d9=true
+        d3d10 -Denable_d3d10=true
+        d3d11 -Denable_d3d11=true
+        sdl2  -Dnative_sdl2=enabled
+        sdl3  -Dnative_sdl3=enabled
+        glfw  -Dnative_glfw=enabled
+    INVERTED_FEATURES
+        dxgi  -Denable_dxgi=false
+        d3d8  -Denable_d3d8=false
+        d3d9  -Denable_d3d9=false
+        d3d10 -Denable_d3d10=false
+        d3d11 -Denable_d3d11=false
+        sdl2  -Dnative_sdl2=disabled
+        sdl3  -Dnative_sdl3=disabled
+        glfw  -Dnative_glfw=disabled
 )
 
 vcpkg_configure_meson(
