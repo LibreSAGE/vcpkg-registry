@@ -1,3 +1,8 @@
 {
-  "default": {}
+  "default": {
+    "dxvk": {
+      "baseline": "3.0",
+      "port-version": 0
+    }
+  }
 }
