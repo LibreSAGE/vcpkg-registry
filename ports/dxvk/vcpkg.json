@@ -1,0 +1,66 @@
+{
+  "name": "dxvk",
+  "version": "3.0",
+  "description": "A Vulkan-based translation layer for Direct3D 8/9/10/11 (LibreSAGE fork).",
+  "homepage": "https://github.com/LibreSAGE/dxvk",
+  "license": "Zlib",
+  "supports": "windows & !arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    {
+      "name": "vulkan-headers",
+      "platform": "!windows"
+    }
+  ],
+  "default-features": [
+    "d3d10",
+    "d3d11",
+    "d3d8",
+    "d3d9",
+    "dxgi"
+  ],
+  "features": {
+    "d3d10": {
+      "description": "Build the Direct3D 10 implementation",
+      "dependencies": [
+        {
+          "name": "dxvk",
+          "features": [
+            "d3d11"
+          ]
+        }
+      ]
+    },
+    "d3d11": {
+      "description": "Build the Direct3D 11 implementation",
+      "dependencies": [
+        {
+          "name": "dxvk",
+          "features": [
+            "dxgi"
+          ]
+        }
+      ]
+    },
+    "d3d8": {
+      "description": "Build the Direct3D 8 implementation",
+      "dependencies": [
+        {
+          "name": "dxvk",
+          "features": [
+            "d3d9"
+          ]
+        }
+      ]
+    },
+    "d3d9": {
+      "description": "Build the Direct3D 9 implementation"
+    },
+    "dxgi": {
+      "description": "Build the DXGI implementation"
+    }
+  }
+}
