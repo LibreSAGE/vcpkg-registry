@@ -95,4 +95,37 @@ vcpkg_fixup_pkgconfig()
 # include/dxvk; keep the release copy and drop the duplicate debug tree.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# Upstream only ships pkg-config files. Generate a CMake package config that
+# exposes an imported target (DXVK::<component>) for every enabled component so
+# consumers can use find_package(DXVK CONFIG). Map each feature to the base name
+# of the library it produces.
+set(_dxvk_feature_libs
+    "dxgi=dxgi:dxvk_dxgi"
+    "d3d8=d3d8:dxvk_d3d8"
+    "d3d9=d3d9:dxvk_d3d9"
+    "d3d10=d3d10core:dxvk_d3d10core"
+    "d3d11=d3d11:dxvk_d3d11"
+)
+set(DXVK_CMAKE_TARGETS "")
+foreach(_map IN LISTS _dxvk_feature_libs)
+    string(REPLACE "=" ";" _map "${_map}")
+    list(GET _map 0 _feature)
+    list(GET _map 1 _target)
+    if(_feature IN_LIST FEATURES)
+        list(APPEND DXVK_CMAKE_TARGETS "${_target}")
+    endif()
+endforeach()
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/DXVKConfig.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/DXVKConfig.cmake"
+    @ONLY
+)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/DXVKConfigVersion.cmake"
+    VERSION "${VERSION}"
+    COMPATIBILITY SameMajorVersion
+)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
