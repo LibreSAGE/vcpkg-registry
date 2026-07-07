@@ -13,11 +13,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibreSAGE/dxvk
     REF "v${VERSION}"
-    SHA512 dc29ede4d7079b7ecbab0bea4456acf0bb6717cf8fcdfdbe2456b773c1322bc083fd6cc3194a44807b10eb6f3620be3d0e0468f38ba7294f314090316776cac4
+    SHA512 3d21090a2f53dc718a3e7a5d36ba3a97c5aae211dcfb3216b5641b485d502a60f05f5b1744a9fa6911d75a2c6f81e1cd089717c12664b3fef8bd899a4ccc452b
     HEAD_REF master
 )
 
-# --- Stage required submodules (pinned to the commits referenced by v3.0) ---
+# --- Stage required submodules (pinned to the commits referenced by v3.0.1) ---
 vcpkg_from_github(
     OUT_SOURCE_PATH DXBC_SPIRV_SOURCE
     REPO doitsujin/dxbc-spirv
