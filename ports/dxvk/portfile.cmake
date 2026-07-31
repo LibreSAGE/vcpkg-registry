@@ -6,18 +6,25 @@
 #   * subprojects/dxbc-spirv     - DXBC -> SPIR-V compiler (required, no fallback)
 #   * subprojects/libdisplay-info - EDID/DisplayID parsing (required dependency)
 #   * include/native/directx     - MinGW DirectX headers for the native build
-# The Vulkan and SPIR-V headers (normally the include/vulkan and include/spirv
-# submodules) are provided instead by the vulkan-headers and spirv-headers
-# dependencies, which Meson picks up through its header-check fallback.
+#   * include/vulkan             - Vulkan-Headers
+#   * include/spirv              - SPIRV-Headers
+# The Vulkan and SPIR-V headers have to be vendored at the pinned commits rather
+# than taken from the vulkan-headers/spirv-headers ports: dxvk tracks Khronos
+# very closely (3.0.1 needs VK_KHR_maintenance11 from Vulkan 1.4.350) and the
+# vcpkg ports lag behind, which breaks the build with unknown-type errors.
+#
+# Fork releases are tagged v<version>-sage. v3.0.2-sage is also the first
+# revision that builds on macOS: the MoltenVK commit adds the __APPLE__ branches
+# to util_win32_compat.h and util_env.cpp that v3.0.1 lacks.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibreSAGE/dxvk
-    REF "v${VERSION}"
-    SHA512 3d21090a2f53dc718a3e7a5d36ba3a97c5aae211dcfb3216b5641b485d502a60f05f5b1744a9fa6911d75a2c6f81e1cd089717c12664b3fef8bd899a4ccc452b
-    HEAD_REF master
+    REF "v${VERSION}-sage"
+    SHA512 9461aca5be1c9f81e0163fca6ab46c54c05004768ba523f44ba98cf92cce9c5df9b243d0b397461cb1db8f3917a93baaa9cd5a402a26a7a63fef6de3d30fe38b
+    HEAD_REF v3.0-sage
 )
 
-# --- Stage required submodules (pinned to the commits referenced by v3.0.1) ---
+# --- Stage required submodules (pinned to the commits referenced by the tag) ---
 vcpkg_from_github(
     OUT_SOURCE_PATH DXBC_SPIRV_SOURCE
     REPO doitsujin/dxbc-spirv
@@ -45,12 +52,26 @@ vcpkg_from_github(
     REF c8ad050fcb29e42a2f57d9f59e97488f465c436d
     SHA512 f6a9beccd5f98325f65cbd78412fb409cf5f1476dbced3641fec5728a9c6fad4183dbbc01d8a501bc82a8b5cf5dd5131ae1f46cfcd92e792c32a569e31d083ea
 )
+vcpkg_from_github(
+    OUT_SOURCE_PATH VULKAN_HEADERS_SOURCE
+    REPO KhronosGroup/Vulkan-Headers
+    REF 8864cdc896bbc2a9b6eb36b3218fc9ef57908d77
+    SHA512 ea00b4441b7e9cbfd86c22f094e978577bd29ee80dee1b7dbff6135a5356dd02d6028e75fa192e705d2342ba41b4b56034764aa0dcdb980b99b69073467f7e57
+)
+vcpkg_from_github(
+    OUT_SOURCE_PATH DXVK_SPIRV_HEADERS_SOURCE
+    REPO KhronosGroup/SPIRV-Headers
+    REF 04f10f650d514df88b76d25e83db360142c7b174
+    SHA512 cae8cd179c9013068876908fecc1d158168310ad6ac250398a41f0f5206ceff6469e2aaeab9c820bce9d1b08950c725c89c46e94b89a692be9805432cf749396
+)
 
 foreach(staging IN ITEMS
     "${DXBC_SPIRV_SOURCE}=subprojects/dxbc-spirv"
     "${LIBDISPLAY_INFO_SOURCE}=subprojects/libdisplay-info"
     "${DIRECTX_HEADERS_SOURCE}=include/native/directx"
     "${SPIRV_HEADERS_SOURCE}=subprojects/dxbc-spirv/submodules/spirv_headers"
+    "${VULKAN_HEADERS_SOURCE}=include/vulkan"
+    "${DXVK_SPIRV_HEADERS_SOURCE}=include/spirv"
 )
     string(REPLACE "=" ";" staging "${staging}")
     list(GET staging 0 staging_src)
